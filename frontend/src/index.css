@@ -1,33 +1,148 @@
-/* Global styles */
-* {
+/* =====================================================
+   index.css - Ethereal Logic Global Styles
+===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+
+:root {
+  --primary: #4648d4;
+  --primary-container: #6063ee;
+  --on-primary: #ffffff;
+  --secondary: #b4136d;
+  --on-secondary: #ffffff;
+  --tertiary: #00685d;
+  --surface: #f8f9ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #eff4ff;
+  --surface-container: #e5eeff;
+  --surface-container-high: #dce9ff;
+  --surface-container-highest: #d3e4fe;
+  --on-surface: #0b1c30;
+  --on-surface-variant: #464554;
+  --outline: #767586;
+  --outline-variant: #c7c4d7;
+  --canvas-bg: #F8FAFC;
+  --glass-surface: rgba(255, 255, 255, 0.75);
+  --node-input: #E0F2FE;
+  --node-output: #FFEDD5;
+  --node-logic: #F3E8FF;
+  --success-green: #22C55E;
+  --error-red: #EF4444;
+}
+
+*, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 body {
-  background: #0d0d1a;
+  margin: 0;
+  padding: 0;
   font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #e0e0ff;
+  font-size: 14px;
+  color: var(--on-surface);
+  background-color: var(--canvas-bg);
+  background-image: radial-gradient(circle, var(--outline-variant) 1px, transparent 1px);
+  background-size: 24px 24px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ReactFlow canvas overrides */
+.react-flow {
+  background-color: var(--canvas-bg) !important;
+  background-image: radial-gradient(circle, var(--outline-variant) 1px, transparent 1px) !important;
+  background-size: 24px 24px !important;
+}
+
+.react-flow__background {
+  display: none !important;
+}
+
+/* Edge styling */
+.react-flow__edge-path {
+  stroke: var(--primary) !important;
+  stroke-width: 2.5px !important;
+}
+
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 8 4 !important;
+  animation: flowDash 0.8s linear infinite !important;
+}
+
+@keyframes flowDash {
+  to { stroke-dashoffset: -24; }
+}
+
+.react-flow__arrowhead {
+  fill: var(--primary) !important;
+}
+
+/* Controls styling */
+.react-flow__controls {
+  background: var(--glass-surface) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(199, 196, 215, 0.4) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(70, 72, 212, 0.08) !important;
   overflow: hidden;
 }
 
-/* ReactFlow custom edge */
-.react-flow__edge-path {
-  stroke: #667eea;
-  stroke-width: 2;
-}
-
 .react-flow__controls-button {
-  background: #2a2a3e !important;
-  border-color: #3d3d5c !important;
-  fill: #e0e0ff !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(199, 196, 215, 0.3) !important;
+  color: var(--on-surface-variant) !important;
+  transition: background 0.15s, color 0.15s !important;
 }
 
 .react-flow__controls-button:hover {
-  background: #3d3d5c !important;
+  background: rgba(70, 72, 212, 0.06) !important;
+  color: var(--primary) !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+}
+
+/* Minimap styling */
+.react-flow__minimap {
+  background: var(--glass-surface) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(199, 196, 215, 0.4) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(70, 72, 212, 0.08) !important;
 }
 
 .react-flow__minimap-mask {
-  fill: rgba(0, 0, 0, 0.6);
+  fill: rgba(70, 72, 212, 0.06) !important;
 }
+
+.react-flow__minimap-node {
+  fill: rgba(70, 72, 212, 0.3) !important;
+  stroke: none !important;
+}
+
+/* Selection box */
+.react-flow__selection {
+  background: rgba(70, 72, 212, 0.05) !important;
+  border: 1.5px dashed var(--primary) !important;
+  border-radius: 4px !important;
+}
+
+/* Connection line */
+.react-flow__connection-path {
+  stroke: var(--primary) !important;
+  stroke-width: 2px !important;
+  stroke-dasharray: 6 3 !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--outline); }
