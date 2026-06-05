@@ -1,53 +1,49 @@
-// noteNode.js - New Node 4: Annotation / Note Node (no connections)
+// noteNode.js
 import { useState } from 'react';
 import styles from './nodeStyles.module.css';
+import { useStore } from '../store';
 
 export const NoteNode = ({ id, data }) => {
-  const [note, setNote] = useState(data?.note || 'Add your annotation here...');
-  const [color, setColor] = useState(data?.color || '#ffd700');
+  const [note, setNote] = useState(data?.note || '');
+  const updateNodeField = useStore((s) => s.updateNodeField);
 
   return (
     <div
-      className={styles.nodeContainer}
       style={{
-        borderColor: color,
-        boxShadow: `0 4px 24px ${color}33`,
-        minWidth: 200,
+        position: 'relative',
+        minWidth: '200px',
+        maxWidth: '280px',
+        borderRadius: '12px',
+        background: 'rgba(254,252,232,0.9)',
+        border: '1px solid rgba(217,119,6,0.25)',
+        boxShadow: '0 4px 16px rgba(180,83,9,0.08)',
+        fontFamily: "'Inter', sans-serif",
+        transition: 'box-shadow 0.2s',
       }}
     >
+      {/* Header */}
       <div
-        className={styles.nodeHeader}
-        style={{ background: color, color: '#1a1a2e' }}
+        style={{
+          padding: '8px 12px',
+          borderBottom: '1px solid rgba(217,119,6,0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          background: 'rgba(254,243,199,0.8)',
+          borderRadius: '12px 12px 0 0',
+        }}
       >
-        <span className={styles.nodeIcon}>📌</span>
-        <span className={styles.nodeLabel}>Note</span>
-        <input
-          type="color"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          style={{
-            width: '20px',
-            height: '20px',
-            border: 'none',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            background: 'transparent',
-          }}
-          title="Pick note color"
-        />
+        <span style={{ fontSize: '13px' }}>📌</span>
+        <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#b45309' }}>Note</span>
       </div>
-      <div className={styles.nodeBody}>
+      {/* Body */}
+      <div className={styles.noteBody}>
         <textarea
-          className={styles.fieldInput}
+          className={styles.noteTextarea}
           value={note}
-          onChange={(e) => setNote(e.target.value)}
-          style={{
-            minHeight: '80px',
-            resize: 'none',
-            fontStyle: 'italic',
-            fontSize: '12px',
-          }}
-          rows={4}
+          onChange={(e) => { setNote(e.target.value); updateNodeField(id, 'note', e.target.value); }}
+          placeholder="Add a note..."
+          rows={3}
         />
       </div>
     </div>
