@@ -1,36 +1,55 @@
-/* Node Container */
+/* =====================================================
+   nodeStyles.module.css - Ethereal Logic Design System
+   Light glassmorphic theme
+===================================================== */
+
+/* ---- Node Container ---- */
 .nodeContainer {
   position: relative;
-  min-width: 220px;
-  background: #1e1e2e;
-  border-radius: 12px;
-  border: 1.5px solid #3d3d5c;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  min-width: 240px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(199, 196, 215, 0.5);
+  box-shadow: 0 4px 20px rgba(70, 72, 212, 0.08);
   font-family: 'Inter', 'Segoe UI', sans-serif;
   overflow: visible;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
 }
 
 .nodeContainer:hover {
-  box-shadow: 0 8px 32px rgba(102,126,234,0.25);
-  border-color: #667eea;
+  box-shadow: 0 8px 30px rgba(70, 72, 212, 0.16);
+  border-color: rgba(70, 72, 212, 0.4);
+  transform: translateY(-1px);
 }
 
+/* ---- Node Header ---- */
 .nodeHeader {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border-radius: 10px 10px 0 0;
-  color: #fff;
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.3px;
+  border-radius: 16px 16px 0 0;
+  border-bottom: 1px solid rgba(199, 196, 215, 0.3);
 }
 
-.nodeIcon { font-size: 16px; }
-.nodeLabel { flex: 1; }
+.nodeIcon {
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
 
+.nodeLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #0b1c30;
+}
+
+/* ---- Node Body ---- */
 .nodeBody {
   padding: 12px 14px;
   display: flex;
@@ -38,6 +57,7 @@
   gap: 10px;
 }
 
+/* ---- Field Group ---- */
 .fieldGroup {
   display: flex;
   flex-direction: column;
@@ -45,54 +65,146 @@
 }
 
 .fieldLabel {
-  font-size: 11px;
-  font-weight: 500;
-  color: #8888aa;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  color: #767586;
+  margin-bottom: 2px;
 }
 
+/* ---- Inputs ---- */
 .fieldInput {
-  background: #2a2a3e;
-  border: 1px solid #3d3d5c;
-  border-radius: 6px;
-  padding: 6px 10px;
-  color: #e0e0ff;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid #c7c4d7;
+  border-radius: 0;
+  padding: 5px 2px;
   font-size: 13px;
-  outline: none;
-  transition: border-color 0.15s;
+  font-family: 'Inter', sans-serif;
+  color: #0b1c30;
   width: 100%;
-  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .fieldInput:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102,126,234,0.15);
+  border-bottom-color: #4648d4;
+  background: rgba(70, 72, 212, 0.04);
+  border-radius: 4px 4px 0 0;
+  padding: 5px 6px;
 }
 
-.fieldSelect {
-  background: #2a2a3e;
-  border: 1px solid #3d3d5c;
-  border-radius: 6px;
-  padding: 6px 10px;
-  color: #e0e0ff;
+.fieldInput::placeholder {
+  color: #c7c4d7;
+}
+
+.fieldTextarea {
+  background: rgba(239, 244, 255, 0.6);
+  border: 1px solid rgba(199, 196, 215, 0.4);
+  border-radius: 8px;
+  padding: 8px 10px;
   font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: #0b1c30;
+  width: 100%;
+  min-height: 72px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  line-height: 1.5;
+}
+
+.fieldTextarea:focus {
+  border-color: #4648d4;
+  box-shadow: 0 0 0 3px rgba(70, 72, 212, 0.08);
+  background: #fff;
+}
+
+.fieldTextarea::placeholder {
+  color: #c7c4d7;
+}
+
+/* ---- Select ---- */
+.fieldSelect {
+  background: rgba(239, 244, 255, 0.6);
+  border: 1px solid rgba(199, 196, 215, 0.4);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #0b1c30;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
   outline: none;
   width: 100%;
   cursor: pointer;
+  transition: border-color 0.2s;
 }
 
+.fieldSelect:focus {
+  border-color: #4648d4;
+  box-shadow: 0 0 0 3px rgba(70, 72, 212, 0.08);
+}
+
+/* ---- Handles ---- */
 .handle {
   width: 12px !important;
   height: 12px !important;
-  background: #667eea !important;
-  border: 2px solid #1e1e2e !important;
+  background: #ffffff !important;
+  border: 2px solid #4648d4 !important;
   border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(70, 72, 212, 0.25) !important;
+  transition: transform 0.15s, box-shadow 0.15s !important;
 }
 
+.handle:hover {
+  transform: scale(1.3) !important;
+  box-shadow: 0 0 0 4px rgba(70, 72, 212, 0.15) !important;
+}
+
+/* ---- Handle Labels ---- */
 .handleLabel {
-  font-size: 10px;
-  color: #8888aa;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #767586;
   position: absolute;
   white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ---- Variable chip (textNode) ---- */
+.varChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(96, 99, 238, 0.1);
+  border: 1px solid rgba(70, 72, 212, 0.2);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #4648d4;
+  font-weight: 500;
+  margin: 2px;
+}
+
+/* ---- Note node specific ---- */
+.noteBody {
+  background: rgba(254, 243, 199, 0.7);
+  border-radius: 0 0 16px 16px;
+  padding: 12px 14px;
+}
+
+.noteTextarea {
+  background: transparent;
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: #92400e;
+  width: 100%;
+  min-height: 60px;
+  line-height: 1.6;
 }
