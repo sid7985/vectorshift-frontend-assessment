@@ -1,0 +1,108 @@
+/* Node Container */
+.nodeContainer {
+  position: relative;
+  min-width: 220px;
+  background: #1e1e2e;
+  border-radius: 12px;
+  border: 1.5px solid #3d3d5c;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  overflow: visible;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.nodeContainer:hover {
+  box-shadow: 0 8px 32px rgba(102,126,234,0.25);
+  border-color: #667eea;
+}
+
+/* Node Header */
+.nodeHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px 10px 0 0;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+}
+
+.nodeIcon {
+  font-size: 16px;
+}
+
+.nodeLabel {
+  flex: 1;
+}
+
+/* Node Body */
+.nodeBody {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Form fields inside nodes */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: #8888aa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fieldInput {
+  background: #2a2a3e;
+  border: 1px solid #3d3d5c;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #e0e0ff;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fieldInput:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102,126,234,0.15);
+}
+
+.fieldSelect {
+  background: #2a2a3e;
+  border: 1px solid #3d3d5c;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #e0e0ff;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Handle styling */
+.handle {
+  width: 12px !important;
+  height: 12px !important;
+  background: #667eea !important;
+  border: 2px solid #1e1e2e !important;
+  border-radius: 50% !important;
+}
+
+/* Handle label */
+.handleLabel {
+  font-size: 10px;
+  color: #8888aa;
+  position: absolute;
+  white-space: nowrap;
+}
