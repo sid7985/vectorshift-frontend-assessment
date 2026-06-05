@@ -1,35 +1,35 @@
-// apiNode.js - New Node 2: HTTP API Request Node
+// apiNode.js
 import { useState } from 'react';
 import { BaseNode } from './baseNode';
 import styles from './nodeStyles.module.css';
+import { useStore } from '../store';
 
 export const APINode = ({ id, data }) => {
   const [url, setUrl] = useState(data?.url || '');
   const [method, setMethod] = useState(data?.method || 'GET');
-  const [headers, setHeaders] = useState(data?.headers || '');
+  const updateNodeField = useStore((s) => s.updateNodeField);
 
   return (
     <BaseNode
       id={id}
-      label="API Request"
+      label="API"
       icon="🌐"
-      headerColor="linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
-      inputs={[{ id: 'body' }, { id: 'params' }]}
-      outputs={[{ id: 'response' }, { id: 'error' }]}
+      headerBg="linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)"
+      headerColor="#1d4ed8"
+      inputs={[{ id: 'body' }]}
+      outputs={[{ id: 'response' }]}
     >
       <div className={styles.fieldGroup}>
         <label className={styles.fieldLabel}>Method</label>
         <select
           className={styles.fieldSelect}
           value={method}
-          onChange={(e) => setMethod(e.target.value)}
-          style={{ color: method === 'GET' ? '#38ef7d' : method === 'POST' ? '#4facfe' : '#fa709a' }}
+          onChange={(e) => { setMethod(e.target.value); updateNodeField(id, 'method', e.target.value); }}
         >
-          <option value="GET">GET</option>
-          <option value="POST">POST</option>
-          <option value="PUT">PUT</option>
-          <option value="DELETE">DELETE</option>
-          <option value="PATCH">PATCH</option>
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>DELETE</option>
         </select>
       </div>
       <div className={styles.fieldGroup}>
@@ -38,18 +38,8 @@ export const APINode = ({ id, data }) => {
           className={styles.fieldInput}
           type="text"
           value={url}
-          placeholder="https://api.example.com/..."
-          onChange={(e) => setUrl(e.target.value)}
-        />
-      </div>
-      <div className={styles.fieldGroup}>
-        <label className={styles.fieldLabel}>Headers (JSON)</label>
-        <input
-          className={styles.fieldInput}
-          type="text"
-          value={headers}
-          placeholder='{"Authorization": "Bearer ..."}'  
-          onChange={(e) => setHeaders(e.target.value)}
+          onChange={(e) => { setUrl(e.target.value); updateNodeField(id, 'url', e.target.value); }}
+          placeholder="https://api.example.com/endpoint"
         />
       </div>
     </BaseNode>
