@@ -6,30 +6,31 @@ export const LLMNode = ({ id, data }) => {
   return (
     <BaseNode
       id={id}
-      label="LLM"
-      icon="🤖"
-      headerColor="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      label="LLM Engine"
+      icon="🧠"
+      headerBg="linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%)"
+      headerColor="#7e22ce"
       inputs={[
-        { id: 'system' },
+        { id: 'system_prompt' },
         { id: 'prompt' },
       ]}
       outputs={[{ id: 'response' }]}
     >
-      <div className={styles.fieldGroup}>
-        <label className={styles.fieldLabel}>Model</label>
-        <select className={styles.fieldSelect} defaultValue="gpt-4o">
-          <option value="gpt-4o">GPT-4o</option>
-          <option value="gpt-4-turbo">GPT-4 Turbo</option>
-          <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-          <option value="claude-3-opus">Claude 3 Opus</option>
-          <option value="claude-3-sonnet">Claude 3 Sonnet</option>
-          <option value="gemini-pro">Gemini Pro</option>
-        </select>
-      </div>
-      <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-        <div style={{ fontSize: '11px', color: '#8888aa' }}>system ←</div>
-        <div style={{ fontSize: '11px', color: '#8888aa' }}>prompt ←</div>
-        <div style={{ fontSize: '11px', color: '#8888aa' }}>response →</div>
+      <div style={{ fontSize: '12px', color: '#767586', lineHeight: 1.5 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+          <span style={{ fontWeight: 600, color: '#464554' }}>Model</span>
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#7e22ce', fontSize: '11px' }}>GPT-4</span>
+        </div>
+        <div style={{
+          background: 'rgba(243,232,255,0.4)',
+          borderRadius: '8px',
+          padding: '8px 10px',
+          fontSize: '11px',
+          color: '#767586',
+          lineHeight: 1.5,
+        }}>
+          Processes prompts with an LLM and returns the generated response.
+        </div>
       </div>
     </BaseNode>
   );
