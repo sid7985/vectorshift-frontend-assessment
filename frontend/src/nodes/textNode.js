@@ -1,125 +1,58 @@
-// textNode.js - Part 3: Auto-resize + Dynamic variable handles
-import { useState, useEffect, useRef } from 'react';
+// textNode.js - with variable detection
+import { useState, useEffect } from 'react';
+import { BaseNode } from './baseNode';
 import { Handle, Position } from 'reactflow';
 import styles from './nodeStyles.module.css';
-
-// Extract valid JS variable names from {{ varName }} patterns
-const extractVariables = (text) => {
-  const regex = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;
-  const vars = [];
-  let match;
-  while ((match = regex.exec(text)) !== null) {
-    if (!vars.includes(match[1])) {
-      vars.push(match[1]);
-    }
-  }
-  return vars;
-};
+import { useStore } from '../store';
 
 export const TextNode = ({ id, data }) => {
-  const [text, setText] = useState(data?.text || '{{input}}');
+  const [text, setText] = useState(data?.text || '');
   const [variables, setVariables] = useState([]);
-  const textareaRef = useRef(null);
+  const updateNodeField = useStore((s) => s.updateNodeField);
 
-  // Extract variables whenever text changes
   useEffect(() => {
-    setVariables(extractVariables(text));
+    const matches = [...text.matchAll(/\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}/g)];
+    const vars = [...new Set(matches.map((m) => m[1]))];
+    setVariables(vars);
   }, [text]);
-
-  // Auto-resize textarea
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-    }
-  }, [text]);
-
-  const minWidth = 220;
-  const charWidth = 8;
-  const lineCount = text.split('\n').length;
-  const maxLineLen = Math.max(...text.split('\n').map(l => l.length), 10);
-  const dynWidth = Math.max(minWidth, maxLineLen * charWidth + 40);
 
   return (
-    <div className={styles.nodeContainer} style={{ minWidth: dynWidth, width: dynWidth }}>
+    <BaseNode
+      id={id}
+      label="Text"
+      icon="📝"
+      headerBg="linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)"
+      headerColor="#166534"
+      outputs={[{ id: 'output' }]}
+    >
       {/* Dynamic input handles for variables */}
-      {variables.map((varName, index) => (
+      {variables.map((v, i) => (
         <Handle
-          key={varName}
+          key={v}
           type="target"
           position={Position.Left}
-          id={`${id}-${varName}`}
-          style={{ top: `${((index + 1) / (variables.length + 1)) * 100}%` }}
+          id={`${id}-${v}`}
+          style={{ top: `${((i + 1) / (variables.length + 1)) * 100}%` }}
           className={styles.handle}
         />
       ))}
-
-      {/* Variable labels */}
-      {variables.map((varName, index) => (
-        <div
-          key={`label-${varName}`}
-          style={{
-            position: 'absolute',
-            left: '-60px',
-            top: `calc(${((index + 1) / (variables.length + 1)) * 100}% - 8px)`,
-            fontSize: '10px',
-            color: '#8888aa',
-            width: '55px',
-            textAlign: 'right',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {varName}
-        </div>
-      ))}
-
-      {/* Header */}
-      <div
-        className={styles.nodeHeader}
-        style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}
-      >
-        <span className={styles.nodeIcon}>📝</span>
-        <span className={styles.nodeLabel}>Text</span>
+      <div className={styles.fieldGroup}>
+        <label className={styles.fieldLabel}>Content</label>
+        <textarea
+          className={styles.fieldTextarea}
+          value={text}
+          onChange={(e) => { setText(e.target.value); updateNodeField(id, 'text', e.target.value); }}
+          placeholder="Enter text... Use {{variable}} for dynamic inputs"
+          rows={4}
+        />
       </div>
-
-      {/* Body */}
-      <div className={styles.nodeBody}>
-        <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Content</label>
-          <textarea
-            ref={textareaRef}
-            className={styles.fieldInput}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            style={{
-              resize: 'none',
-              overflow: 'hidden',
-              minHeight: '60px',
-              width: '100%',
-              boxSizing: 'border-box',
-              fontFamily: 'monospace',
-              fontSize: '12px',
-              lineHeight: '1.5',
-            }}
-            rows={Math.max(3, lineCount)}
-          />
+      {variables.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
+          {variables.map((v) => (
+            <span key={v} className={styles.varChip}>{`{{${v}}}`}</span>
+          ))}
         </div>
-        {variables.length > 0 && (
-          <div style={{ fontSize: '11px', color: '#667eea' }}>
-            🔗 Variables: {variables.join(', ')}
-          </div>
-        )}
-      </div>
-
-      {/* Output handle */}
-      <Handle
-        type="source"
-        position={Position.Right}
-        id={`${id}-output`}
-        className={styles.handle}
-      />
-    </div>
+      )}
+    </BaseNode>
   );
 };
