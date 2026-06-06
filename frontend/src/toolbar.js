@@ -1,5 +1,15 @@
 // toolbar.js - Ethereal Logic Node Palette
+import { useStore } from './store';
+import { shallow } from 'zustand/shallow';
+
+const selector = (state) => ({
+  addNode: state.addNode,
+  getNodeID: state.getNodeID,
+});
+
 export const PipelineToolbar = () => {
+  const { addNode, getNodeID } = useStore(selector, shallow);
+
   const nodes = [
     { type: 'customInput',  label: 'Input',     icon: '🔵', bgColor: '#E0F2FE', iconColor: '#0369a1', category: 'I/O' },
     { type: 'customOutput', label: 'Output',    icon: '🟠', bgColor: '#FFEDD5', iconColor: '#c2410c', category: 'I/O' },
@@ -15,6 +25,17 @@ export const PipelineToolbar = () => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', JSON.stringify({ nodeType }));
     event.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleNodeClick = (type) => {
+    const nodeID = getNodeID(type);
+    const newNode = {
+      id: nodeID,
+      type,
+      position: { x: Math.random() * 200 + 100, y: Math.random() * 200 + 100 },
+      data: { id: nodeID, nodeType: type },
+    };
+    addNode(newNode);
   };
 
   const styles = {
@@ -119,7 +140,7 @@ export const PipelineToolbar = () => {
         <div style={styles.headerIcon}>🔷</div>
         <div>
           <div style={styles.headerTitle}>Node Palette</div>
-          <div style={styles.headerSub}>Drag to canvas</div>
+          <div style={styles.headerSub}>Click or Drag to canvas</div>
         </div>
       </div>
 
@@ -130,6 +151,7 @@ export const PipelineToolbar = () => {
             key={node.type}
             draggable
             onDragStart={(e) => onDragStart(e, node.type)}
+            onClick={() => handleNodeClick(node.type)}
             style={styles.nodeCard}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = '0 6px 20px rgba(70,72,212,0.15)';

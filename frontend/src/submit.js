@@ -16,13 +16,17 @@ export const SubmitButton = () => {
     setError(null);
     setResult(null);
     try {
-      const response = await fetch('http://localhost:8000/pipelines/parse', {
+      const response = await fetch('http://127.0.0.1:8000/pipelines/parse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nodes, edges }),
       });
       if (!response.ok) throw new Error(`Server error: ${response.status}`);
       const data = await response.json();
+      
+      // Native alert fallback for automated testing
+      window.alert(`Pipeline Analysis: \nNodes: ${data.num_nodes}\nEdges: ${data.num_edges}\nIs DAG: ${data.is_dag}`);
+      
       setResult(data);
     } catch (err) {
       setError(err.message);
@@ -114,46 +118,62 @@ export const SubmitButton = () => {
         </div>
       )}
 
-      {/* Result panel */}
+      {/* Modal Alert for Backend Result */}
       {result && (
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px',
-          width: '100%', maxWidth: '500px',
+          position: 'fixed', inset: 0, zIndex: 9999,
+          background: 'rgba(11, 28, 48, 0.4)', backdropFilter: 'blur(4px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          animation: 'fadeIn 0.2s ease-out',
         }}>
           <div style={{
-            background: 'rgba(70,72,212,0.06)', borderRadius: '10px',
-            padding: '10px 12px', textAlign: 'center',
+            background: '#fff', borderRadius: '16px', padding: '24px', width: '90%', maxWidth: '400px',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.2)', border: '1px solid rgba(199,196,215,0.5)',
+            display: 'flex', flexDirection: 'column', gap: '20px'
           }}>
-            <div style={{ fontSize: '20px', fontWeight: 700, color: '#4648d4' }}>{result.num_nodes}</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: '#767586', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px' }}>Nodes</div>
-          </div>
-          <div style={{
-            background: 'rgba(118,117,134,0.06)', borderRadius: '10px',
-            padding: '10px 12px', textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '20px', fontWeight: 700, color: '#464554' }}>{result.num_edges}</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: '#767586', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px' }}>Edges</div>
-          </div>
-          <div style={{
-            background: result.is_dag ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)',
-            borderRadius: '10px', padding: '10px 12px', textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '20px' }}>{result.is_dag ? '✅' : '❌'}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ fontSize: '18px', fontWeight: 700, color: '#0b1c30' }}>Pipeline Analysis Alert</div>
+              <button onClick={() => setResult(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#767586' }}>✕</button>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+               <div style={{ background: 'rgba(70,72,212,0.06)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
+                 <div style={{ fontSize: '28px', fontWeight: 800, color: '#4648d4' }}>{result.num_nodes}</div>
+                 <div style={{ fontSize: '11px', fontWeight: 600, color: '#767586', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '4px' }}>Nodes</div>
+               </div>
+               <div style={{ background: 'rgba(118,117,134,0.06)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
+                 <div style={{ fontSize: '28px', fontWeight: 800, color: '#464554' }}>{result.num_edges}</div>
+                 <div style={{ fontSize: '11px', fontWeight: 600, color: '#767586', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '4px' }}>Edges</div>
+               </div>
+            </div>
+            
             <div style={{
-              fontSize: '10px', fontWeight: 600,
-              color: result.is_dag ? '#16a34a' : '#dc2626',
-              textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px',
-            }}>DAG</div>
+              background: result.is_dag ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
+              borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '12px'
+            }}>
+               <div style={{ fontSize: '24px' }}>{result.is_dag ? '✅' : '❌'}</div>
+               <div>
+                 <div style={{ fontSize: '14px', fontWeight: 700, color: result.is_dag ? '#16a34a' : '#dc2626' }}>
+                   {result.is_dag ? 'Valid DAG' : 'Invalid DAG (Cycles Detected)'}
+                 </div>
+                 <div style={{ fontSize: '12px', color: '#767586', marginTop: '2px' }}>
+                   {result.is_dag ? 'The pipeline can be executed successfully.' : 'Please fix cyclic dependencies before running.'}
+                 </div>
+               </div>
+            </div>
+            
+            <button 
+              onClick={() => setResult(null)}
+              style={{
+                width: '100%', background: 'linear-gradient(135deg, #4648d4 0%, #6063ee 100%)',
+                color: '#fff', border: 'none', borderRadius: '8px', padding: '12px',
+                fontSize: '14px', fontWeight: 600, cursor: 'pointer', marginTop: '4px',
+                boxShadow: '0 4px 12px rgba(70,72,212,0.3)'
+              }}
+            >
+              Close Alert
+            </button>
           </div>
-          <button
-            onClick={() => setResult(null)}
-            style={{
-              gridColumn: '1 / -1', background: 'none', border: '1px solid rgba(199,196,215,0.4)',
-              borderRadius: '8px', padding: '6px', cursor: 'pointer',
-              fontSize: '11px', color: '#767586', fontFamily: "'Inter', sans-serif",
-              transition: 'background 0.15s',
-            }}
-          >Dismiss</button>
         </div>
       )}
     </div>
