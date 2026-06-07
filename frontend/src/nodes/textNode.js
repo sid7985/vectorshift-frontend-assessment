@@ -1,7 +1,7 @@
 // textNode.js - with variable detection and auto-sizing
 import { useState, useEffect } from 'react';
 import { BaseNode } from './baseNode';
-import { Handle, Position, useUpdateNodeInternals } from 'reactflow';
+import { useUpdateNodeInternals } from 'reactflow';
 import styles from './nodeStyles.module.css';
 import { useStore } from '../store';
 
@@ -14,16 +14,20 @@ export const TextNode = ({ id, data }) => {
   useEffect(() => {
     const matches = [...text.matchAll(/\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}/g)];
     const vars = [...new Set(matches.map((m) => m[1]))];
-    
-    setVariables(prevVars => {
-      // Only update and trigger react flow internals if the variables actually changed
+
+    setVariables((prevVars) => {
       if (JSON.stringify(prevVars) !== JSON.stringify(vars)) {
+        // Defer so ReactFlow processes the new handles after render
         setTimeout(() => updateNodeInternals(id), 0);
         return vars;
       }
       return prevVars;
     });
   }, [text, id, updateNodeInternals]);
+
+  // Build dynamicInputs for BaseNode so handles are rendered at container
+  // level — ensures top-% positioning is relative to the full node height.
+  const dynamicInputs = variables.map((v) => ({ id: v, label: v }));
 
   return (
     <BaseNode
@@ -33,25 +37,14 @@ export const TextNode = ({ id, data }) => {
       headerBg="linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)"
       headerColor="#166534"
       outputs={[{ id: 'output' }]}
+      dynamicInputs={dynamicInputs}
     >
-      {/* Dynamic input handles for variables */}
-      {variables.map((v, i) => (
-        <Handle
-          key={v}
-          type="target"
-          position={Position.Left}
-          id={`${id}-${v}`}
-          style={{ top: `${((i + 1) / (variables.length + 1)) * 100}%` }}
-          className={styles.handle}
-        />
-      ))}
       <div className={styles.fieldGroup}>
         <label className={styles.fieldLabel}>Content</label>
-        
-        {/* Auto-sizing container */}
+
+        {/* Mirror div forces the wrapper to grow with content */}
         <div style={{ position: 'relative', width: 'fit-content', minWidth: '100%' }}>
-          {/* Hidden mirror element to dictate dimensions */}
-          <div 
+          <div
             aria-hidden="true"
             style={{
               visibility: 'hidden',
@@ -63,18 +56,18 @@ export const TextNode = ({ id, data }) => {
               lineHeight: '1.5',
               minHeight: '72px',
               minWidth: '200px',
-              border: '1px solid transparent'
+              border: '1px solid transparent',
             }}
           >
             {text + ' '}
           </div>
-          
+
           <textarea
             className={styles.fieldTextarea}
             value={text}
-            onChange={(e) => { 
-              setText(e.target.value); 
-              updateNodeField(id, 'text', e.target.value); 
+            onChange={(e) => {
+              setText(e.target.value);
+              updateNodeField(id, 'text', e.target.value);
             }}
             placeholder="Enter text... Use {{variable}}"
             style={{
@@ -83,12 +76,14 @@ export const TextNode = ({ id, data }) => {
               left: 0,
               width: '100%',
               height: '100%',
-              resize: 'none',
-              overflow: 'hidden'
+              resize: 'none',   // auto-sizing via mirror; manual resize disabled
+              overflow: 'hidden',
             }}
           />
         </div>
       </div>
+
+      {/* Variable chip indicators */}
       {variables.length > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
           {variables.map((v) => (

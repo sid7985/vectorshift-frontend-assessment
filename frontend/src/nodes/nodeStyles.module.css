@@ -99,6 +99,10 @@
   color: #c7c4d7;
 }
 
+/* ---- Textarea
+   NOTE: resize is intentionally set to none here because the TextNode uses
+   a hidden mirror div to auto-size the textarea. If you want a resizable
+   textarea in a different node, override this with an inline style. ---- */
 .fieldTextarea {
   background: rgba(239, 244, 255, 0.6);
   border: 1px solid rgba(199, 196, 215, 0.4);
@@ -109,7 +113,7 @@
   color: #0b1c30;
   width: 100%;
   min-height: 72px;
-  resize: vertical;
+  resize: none;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   line-height: 1.5;
@@ -163,14 +167,19 @@
 
 /* ---- Handle Labels ---- */
 .handleLabel {
+  position: absolute;
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #767586;
-  position: absolute;
   white-space: nowrap;
   pointer-events: none;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1px 4px;
+  border-radius: 4px;
 }
 
 /* ---- Variable chip (textNode) ---- */

@@ -28,10 +28,12 @@ export const useStore = create((set, get) => ({
       get().edges
     ),
   }),
+  // FIX: return a new node object instead of mutating the existing one
   updateNodeField: (nodeId, fieldName, fieldValue) => set({
-    nodes: get().nodes.map((node) => {
-      if (node.id === nodeId) node.data = { ...node.data, [fieldName]: fieldValue };
-      return node;
-    }),
+    nodes: get().nodes.map((node) =>
+      node.id === nodeId
+        ? { ...node, data: { ...node.data, [fieldName]: fieldValue } }
+        : node
+    ),
   }),
 }));
